@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Coupon Import for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="PluginCompany_CouponImport" setup_version="0.1.0">
+        <sequence>
+            <module name="Magento_SalesRule"/>
+        </sequence>
+    </module>
+</config>

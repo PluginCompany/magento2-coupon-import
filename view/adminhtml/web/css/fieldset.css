@@ -1,0 +1,21 @@
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Coupon Import for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+.fieldset-small legend {
+    width: calc(100% - 40px)!important;
+    margin-left: 20px!important;
+}
+.fieldset-small legend span {
+    font-size: 1.45rem!important;
+}
+
+#coupons_information_fieldset {
+    padding-top:0px;
+}
+
+.no-padding-bottom {
+    padding-bottom:0px!important;
+}

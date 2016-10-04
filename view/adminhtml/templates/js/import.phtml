@@ -1,0 +1,28 @@
+<script>
+/**
+ * Copyright (c) 2014-2026 Plugin Company
+ *
+ * This file is part of Coupon Import for Magento 2, released under the MIT License.
+ * See the LICENSE file in the project root.
+ */
+    require([
+        'jquery',
+        "uiRegistry",
+        'Magento_Ui/js/modal/alert',
+        'PluginCompany_CouponImport/js/couponimporter',
+        'prototype'
+    ], function(jQuery, registry, alert, couponImporter) {
+        
+        window.importCoupons = function(idPrefix, fieldSetId, importUrl, grid) {
+            couponImporter
+                .setWrapperEmId(idPrefix + fieldSetId)
+                .setImportUrl(importUrl)
+                .setGridJsObject(grid)
+                .setFileEmId(idPrefix + 'coupon_upload')
+                .setCouponTextAreaEmId(idPrefix + 'pasted_coupons')
+            ;
+            couponImporter.import();
+            return;
+        }
+    });
+</script>
