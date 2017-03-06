@@ -15,6 +15,9 @@
         <referenceBlock name="promo_sales_rule_edit_tab_coupons" template="PluginCompany_CouponImport::tab/coupons.phtml">
             <block class="PluginCompany\CouponImport\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Import" name="plugincompany_import_coupons" />
         </referenceBlock>
+        <referenceBlock name="promo_quote_edit_tab_coupons" template="PluginCompany_CouponImport::tab/coupons.phtml">
+            <block class="PluginCompany\CouponImport\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons\Import" name="plugincompany_import_coupons_mage2012" before="-" />
+        </referenceBlock>
     </body>
     <referenceBlock name="head.components">
         <block class="Magento\Framework\View\Element\Js\Components"
