@@ -7,6 +7,14 @@
  */
 namespace PluginCompany\CouponImport\Controller\Adminhtml\Import;
 
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\File\Csv;
+use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\View\Result\PageFactory;
+use Magento\SalesRule\Model\RuleRepository;
+use PluginCompany\CouponImport\Model\Import;
+use Psr\Log\LoggerInterface;
+
 /**
  * Class File
  * @package PluginCompany\CouponImport\Controller\Adminhtml\Import
@@ -17,17 +25,22 @@ class File extends ImportAbstract
 
     /**
      * File constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \PluginCompany\CouponImport\Model\Import $couponImporter
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param Import $couponImporter
+     * @param Data $jsonHelper
+     * @param LoggerInterface $loggerInterface
+     * @param RuleRepository $ruleRepository
+     * @param Csv $csvProcessor
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \PluginCompany\CouponImport\Model\Import $couponImporter,
-        \Magento\Framework\Json\Helper\Data $jsonHelper,
-        \Psr\Log\LoggerInterface $loggerInterface,
-        \Magento\Framework\File\Csv $csvProcessor
+        Context $context,
+        PageFactory $resultPageFactory,
+        Import $couponImporter,
+        Data $jsonHelper,
+        LoggerInterface $loggerInterface,
+        RuleRepository $ruleRepository,
+        Csv $csvProcessor
     ) {
         $this->csvProcessor = $csvProcessor;
         return parent::__construct(
@@ -35,7 +48,8 @@ class File extends ImportAbstract
             $resultPageFactory,
             $couponImporter,
             $jsonHelper,
-            $loggerInterface
+            $loggerInterface,
+            $ruleRepository
         );
     }
     
@@ -101,7 +115,6 @@ class File extends ImportAbstract
     }
 
     /**
-     * @param $fh
      * @return array
      */
     private function getCouponArrayFromUploadedFile()

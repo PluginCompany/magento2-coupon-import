@@ -7,6 +7,13 @@
  */
 namespace PluginCompany\CouponImport\Controller\Adminhtml\Import;
 
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\Json\Helper\Data;
+use Magento\Framework\View\Result\PageFactory;
+use Magento\SalesRule\Model\RuleRepository;
+use PluginCompany\CouponImport\Model\Import;
+use Psr\Log\LoggerInterface;
+
 /**
  * Class ImportAbstract
  * @package PluginCompany\CouponImport\Controller\Adminhtml\Import
@@ -18,11 +25,11 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
      */
     protected $coupons;
     /**
-     * @var \PluginCompany\CouponImport\Model\Import
+     * @var Import
      */
     protected $couponImporter;
     /**
-     * @var \Magento\Framework\View\Result\PageFactory
+     * @var PageFactory
      */
     protected $resultPageFactory;
     /**
@@ -30,32 +37,41 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
      */
     protected $messageManager;
     /**
-     * @var \Magento\Framework\Json\Helper\Data
+     * @var Data
      */
     protected $jsonHelper;
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     protected $loggerInterface;
+    /**
+     * @var RuleRepository
+     */
+    protected $ruleRepository;
 
     /**
      * ImportAbstract constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
-     * @param \PluginCompany\CouponImport\Model\Import $couponImporter
+     * @param Context $context
+     * @param PageFactory $resultPageFactory
+     * @param Import $couponImporter
+     * @param Data $jsonHelper
+     * @param LoggerInterface $loggerInterface
+     * @param RuleRepository $ruleRepository
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Framework\View\Result\PageFactory $resultPageFactory,
-        \PluginCompany\CouponImport\Model\Import $couponImporter,
-        \Magento\Framework\Json\Helper\Data $jsonHelper,
-        \Psr\Log\LoggerInterface $loggerInterface
+        Context $context,
+        PageFactory $resultPageFactory,
+        Import $couponImporter,
+        Data $jsonHelper,
+        LoggerInterface $loggerInterface,
+        RuleRepository $ruleRepository
     ) {
         $this->couponImporter = $couponImporter;
         $this->resultPageFactory = $resultPageFactory;
         $this->messageManager = $context->getMessageManager();
         $this->jsonHelper = $jsonHelper;
         $this->loggerInterface = $loggerInterface;
+        $this->ruleRepository = $ruleRepository;
         parent::__construct($context);
     }
 
@@ -65,24 +81,25 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
-            $this->couponImporter
-                ->importCoupons($this->getCouponArray(), $this->getRuleId());
-
-            $this->generateResultMessages();
-            $this->sendResponse();
+            if(!$this->ruleAllowsAutoGeneration()){
+                return $this->sendAutoGenerationError();
+            }
+            $this->executeImport();
         } catch (\Exception $e) {
-            $this->generateErrorMessage();
-            $this->loggerInterface->critical($e);
-            $this->sendResponse();
+            $this->handleError($e);
         }
     }
 
-    /**
-     * Get array of coupons from user submitted data
-     *
-     * @return array
-     */
-    abstract protected function getCouponArray();
+    private function ruleAllowsAutoGeneration()
+    {
+        return $this->getRule()->getUseAutoGeneration();
+    }
+
+    private function getRule()
+    {
+        return $this->ruleRepository
+            ->getById($this->getRuleId());
+    }
 
     /**
      * Get current rule ID from request parameters
@@ -93,6 +110,35 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
     {
         return $this->getRequest()->getParam('id');
     }
+
+
+    private function sendAutoGenerationError()
+    {
+        $this->generateErrorMessage("In order to import coupons, please first enable coupon auto generation and save the rule");
+        $this->sendResponse();
+    }
+
+    private function executeImport()
+    {
+        $this->importCoupons();
+        $this->generateResultMessages();
+        $this->sendResponse();
+        return $this;
+    }
+
+    private function importCoupons()
+    {
+        $this->couponImporter
+            ->importCoupons($this->getCouponArray(), $this->getRuleId());
+        return $this;
+    }
+
+    /**
+     * Get array of coupons from user submitted data
+     *
+     * @return array
+     */
+    abstract protected function getCouponArray();
 
     /**
      * Generate success / notification messages
@@ -122,7 +168,7 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
     {
         $this->messageManager
             ->addNoticeMessage(__('%1 duplicate codes not added', 
-                $this->_couponImporter->getDuplicateCouponCount()));
+                $this->couponImporter->getDuplicateCouponCount()));
         return $this;
     }
 
@@ -182,15 +228,26 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
         return $this->_view->getLayout()->getMessagesBlock()->getGroupedHtml();
     }
 
+    protected function handleError($e)
+    {
+        $this->generateErrorMessage();
+        $this->loggerInterface->critical($e);
+        $this->sendResponse();
+    }
+
     /**
      * Error message when exception is thrown
      *
+     * @param string $message
      * @return $this
      */
-    protected function generateErrorMessage()
+    protected function generateErrorMessage($message = "")
     {
+        if(!$message){
+            $message = 'Something went wrong during import. Please review error logs for details.';
+        }
         $this->messageManager
-            ->addErrorMessage(__('Something went wrong during import. Please review error logs for details.'));
+            ->addErrorMessage(__($message));
         return $this;
     }
     
