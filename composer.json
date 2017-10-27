@@ -6,7 +6,7 @@
         "magento/framework": "~100.0|~101.0"
     },
     "type": "magento2-module",
-    "version": "100.0.3",
+    "version": "100.0.4",
     "license": "MIT",
     "homepage": "https://plugin.company/magento-extensions/coupon-import.html",
     "support": {
