@@ -7,20 +7,24 @@
  */
 namespace PluginCompany\CouponImport\Plugin\Block\Adminhtml\Promo\Quote\Edit\Tab\Coupons;
 
+use Magento\Framework\Data\Form;
+
 class FormPlugin
 {
     /**
      * Adds a fieldset legend to the coupon generation section
      *
      * @param $subject
-     * @param $form
+     * @param Form $form
      */
     public function beforeSetForm($subject, $form)
     {
         $infoFieldset = $form->getElement('information_fieldset');
+
         $infoFieldset
             ->setLegend(__('Generate Coupon Codes'))
             ->setClass('fieldset-small')
         ;
+        $form->getElement('generate_button')->setData('label', ' ');
     }
 }

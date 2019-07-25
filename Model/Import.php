@@ -84,6 +84,8 @@ class Import
      */
     public function importCoupons(array $coupons, $ruleId)
     {
+        ini_set('memory_limit', -1);
+        ini_set('max_execution_time', 0);
         $this
             ->loadRule($ruleId)
             ->setCoupons($coupons)

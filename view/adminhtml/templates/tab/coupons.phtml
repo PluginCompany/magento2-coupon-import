@@ -7,6 +7,11 @@
  */
 ?>
 <div id="sales-rule-form-tab-coupons">
+    <div class="messages pc-coupon-import-message" style="display:none;">
+        <div class="message message-info info">
+            <?= __("To enable bulk importing coupon codes, please select 'Specific Coupon' and check the 'Use Auto Generation' checkbox in the Rule Information tab.") ?>
+        </div>
+    </div>
     <?php echo $block->getChildHtml('plugincompany_import_coupons') ?>
     <?php echo $block->getChildHtml('promo_quote_edit_tab_coupons_form') ?>
     <?php echo $block->getChildHtml('promo_quote_edit_tab_coupons_grid') ?>

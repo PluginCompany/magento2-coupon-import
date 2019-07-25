@@ -76,7 +76,10 @@ define([
                 files: jQuery(':file'),
                 iframe: true,
                 dataType: "json",
-                data: {coupons: this.getCouponsFromTextArea()},
+                data: {
+                    coupons: this.getCouponsFromTextArea(),
+                    form_key: window.FORM_KEY
+                },
                 processData: false,
                 showLoader: true,
                 context: $('#' + couponImporter.wrapperEmId),

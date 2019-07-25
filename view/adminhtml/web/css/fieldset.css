@@ -7,9 +7,20 @@
 .fieldset-small legend {
     width: calc(100% - 40px)!important;
     margin-left: 20px!important;
+    float: left;
+    box-sizing: border-box;
+    padding: 0;
+    border-bottom: 1px solid #dedede!important;
+    margin: 0 0 18px;
+
 }
 .fieldset-small legend span {
     font-size: 1.45rem!important;
+    color: #303030;
+    font-size: 1.7rem;
+    font-weight: 600;
+    padding: 7px 0 10px;
+    display: inline-block;
 }
 
 #coupons_information_fieldset {
@@ -18,4 +29,12 @@
 
 .no-padding-bottom {
     padding-bottom:0px!important;
+}
+
+.pc-couponimport {
+    display:none!important;
+}
+
+.pc-show-fieldset {
+    display:block!important;
 }

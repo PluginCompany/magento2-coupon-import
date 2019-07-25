@@ -50,7 +50,7 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
             'import_file_fieldset',
             [
                 "legend" => 'Bulk Import Coupon Codes',
-                "class" => 'fieldset-small'
+                "class" => 'fieldset-small pc-couponimport'
             ]
         );
         $fieldset->addClass('ignore-validate');
@@ -79,7 +79,8 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
                     __('Import File'),
                     "importCoupons('{$idPrefix}', '{$fieldsetId}', '{$fileImportUrl}', '{$gridBlockJsObject}')",
                     'import_coupon_file'
-                )
+                ),
+                'label' => ' '
             ]
         );
         
@@ -87,7 +88,7 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
             'import_pasted_fieldset',
             [
                 "legend" => 'Import Coupon Code List',
-                "class" => 'fieldset-small'
+                "class" => 'fieldset-small pc-couponimport'
             ]
         );
         $fieldset->addClass('ignore-validate');
@@ -116,7 +117,8 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
                     __('Import Coupons'),
                     "importCoupons('{$idPrefix}', '{$fieldSetId}' ,'{$pasteImportUrl}', '{$gridBlockJsObject}')",
                     'import_coupon_pasted'
-                )
+                ),
+                'label' => ' '
             ]
         );
 
@@ -137,7 +139,10 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
      */
     public function getFileImportUrl()
     {
-        return $this->getUrl('couponimport/import/file', ['_current' => true]);
+        return $this->getUrl(
+            'couponimport/import/file',
+            ['id' => $this->getRequest()->getParam('id')]
+        );
     }
     
     /**
@@ -147,6 +152,9 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
      */
     public function getPasteImportUrl()
     {
-        return $this->getUrl('couponimport/import/postdata', ['_current' => true]);
+        return $this->getUrl(
+            'couponimport/import/postdata',
+            ['id' => $this->getRequest()->getParam('id')]
+        );
     }
 }
