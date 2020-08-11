@@ -102,6 +102,7 @@ class Import extends \Magento\Backend\Block\Widget\Form\Generic
                 'label' => __('Import Coupons'),
                 'title' => __('Import Coupons'),
                 'required' => true,
+                'rows' => 5,
                 'note' => __('Enter or paste coupon code list with one coupon per line.')
             ]
         );
