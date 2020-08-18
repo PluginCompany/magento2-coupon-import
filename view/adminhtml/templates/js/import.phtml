@@ -37,10 +37,22 @@
         }
 
         registry.get('sales_rule_form.sales_rule_form.rule_information.use_auto_generation', function(autoGenerationField) {
+            showHidePcCouponImportFieldsets(autoGenerationField.checked());
             autoGenerationField.checked.subscribe(function(value){
                 showHidePcCouponImportFieldsets(value);
             })
         });
+
+        registry.get('sales_rule_form.sales_rule_form.block_promo_sales_rule_edit_tab_coupons', function(couponFieldset) {
+            couponFieldset.opened.subscribe(function(value) {
+                setTimeout(function() {
+                    showHidePcCouponImportFieldsets(
+                        registry.get('sales_rule_form.sales_rule_form.rule_information.use_auto_generation').checked()
+                    );
+                }, 100)
+            })
+        })
+
         registry.get('sales_rule_form.sales_rule_form.manage_coupon_codes', function(couponFieldset) {
             couponFieldset.opened.subscribe(function(value) {
                 setTimeout(function() {
@@ -53,4 +65,3 @@
 
     });
 </script>
-
