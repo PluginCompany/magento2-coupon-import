@@ -8,6 +8,7 @@
 namespace PluginCompany\CouponImport\Controller\Adminhtml\Import;
 
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\SalesRule\Model\RuleRepository;
@@ -85,6 +86,8 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
                 return $this->sendAutoGenerationError();
             }
             $this->executeImport();
+        } catch (NoSuchEntityException $e) {
+            $this->handleNoSuchEntityError();
         } catch (\Exception $e) {
             $this->handleError($e);
         }
@@ -226,6 +229,14 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
     protected function getMessageBlockHtml()
     {
         return $this->_view->getLayout()->getMessagesBlock()->getGroupedHtml();
+    }
+
+    protected function handleNoSuchEntityError()
+    {
+        $this->generateErrorMessage(
+            "Rule not found. In order to import coupon codes, please save the rule first."
+        );
+        $this->sendResponse();
     }
 
     protected function handleError($e)
