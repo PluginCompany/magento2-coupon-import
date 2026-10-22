@@ -7,7 +7,7 @@
  */
 namespace PluginCompany\CouponImport\Controller\Adminhtml\Import;
 
-use Magento\Framework\App\Action\Context;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\File\Csv;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\View\Result\PageFactory;

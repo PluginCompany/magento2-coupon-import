@@ -7,7 +7,7 @@
  */
 namespace PluginCompany\CouponImport\Controller\Adminhtml\Import;
 
-use Magento\Framework\App\Action\Context;
+use Magento\Backend\App\Action\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Json\Helper\Data;
 use Magento\Framework\View\Result\PageFactory;
@@ -19,8 +19,13 @@ use Psr\Log\LoggerInterface;
  * Class ImportAbstract
  * @package PluginCompany\CouponImport\Controller\Adminhtml\Import
  */
-abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
+abstract class ImportAbstract extends \Magento\Backend\App\Action
 {
+    /**
+     * Cart Price Rules permission (the coupon import is part of the cart price rule edit page)
+     */
+    const ADMIN_RESOURCE = 'Magento_SalesRule::quote';
+
     /**
      * @var array
      */
@@ -33,10 +38,6 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
      * @var PageFactory
      */
     protected $resultPageFactory;
-    /**
-     * @var \Magento\Framework\Message\ManagerInterface
-     */
-    protected $messageManager;
     /**
      * @var Data
      */
@@ -69,11 +70,20 @@ abstract class ImportAbstract extends \Magento\Framework\App\Action\Action
     ) {
         $this->couponImporter = $couponImporter;
         $this->resultPageFactory = $resultPageFactory;
-        $this->messageManager = $context->getMessageManager();
         $this->jsonHelper = $jsonHelper;
         $this->loggerInterface = $loggerInterface;
         $this->ruleRepository = $ruleRepository;
         parent::__construct($context);
+    }
+
+    /**
+     * Explicit permission check, independent of how the parent class reads ADMIN_RESOURCE
+     *
+     * @return bool
+     */
+    protected function _isAllowed()
+    {
+        return $this->_authorization->isAllowed(self::ADMIN_RESOURCE);
     }
 
     /**
