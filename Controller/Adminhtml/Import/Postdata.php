@@ -21,7 +21,7 @@ class Postdata extends ImportAbstract
      */
     protected function getCouponArray()
     {
-        return explode("\n", $this->getCouponPostData());
+        return explode("\n", (string)$this->getCouponPostData());
     }
 
     /**

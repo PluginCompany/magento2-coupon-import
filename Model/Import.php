@@ -125,7 +125,9 @@ class Import
      */
     private function tidyUpCoupons(array $coupons)
     {
-        return array_filter(array_map('trim', $coupons));
+        return array_filter(array_map(function ($coupon) {
+            return trim((string)$coupon);
+        }, $coupons));
     }
 
     /**
